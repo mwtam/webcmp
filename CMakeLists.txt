@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(GTest REQUIRED)
 
-add_executable(webcmp main.cpp)
+add_executable(webcmp main.cpp webcmp_tools.cpp)
 
 enable_testing()
 
