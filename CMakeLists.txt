@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(GTest REQUIRED)
 
 add_executable(webcmp main.cpp webcmp_tools.cpp)
+find_package(CURL REQUIRED) 
+# include_directories(${CURL_INCLUDE_DIR})
+# target_link_libraries(webcmp ${CURL_LIBRARIES})
+target_link_libraries(webcmp CURL::libcurl)
 
 enable_testing()
 
