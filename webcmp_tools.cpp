@@ -1,9 +1,7 @@
 #include "webcmp_tools.h"
 #include <curl/curl.h>
 
-
-int write_data(char *data, size_t size, size_t nmemb,
-                      std::string *writerData)
+size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string *writerData)
 {
     if (writerData == NULL)
         return 0;
@@ -32,23 +30,32 @@ std::string download_page(const std::string &url)
     curl_handle = curl_easy_init();
 
     /* set URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
 
     /* no progress meter please */
     curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 
-    CURLcode code;
+    CURLcode res;
     std::string buffer;
-    code = curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
-    if (code != CURLE_OK)
+    res = curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
+    if (res != CURLE_OK)
     {
-        return "+++";
+        return curl_easy_strerror(res);
     }
+
     /* send all data to this function  */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+    res = curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, custom_curl_writefunc);
+    if (res != CURLE_OK)
+    {
+        return curl_easy_strerror(res);
+    }
 
     /* get it! */
-    curl_easy_perform(curl_handle);
+    res = curl_easy_perform(curl_handle);
+    if (res != CURLE_OK)
+    {
+        return curl_easy_strerror(res);
+    }
 
     /* cleanup curl stuff */
     curl_easy_cleanup(curl_handle);
