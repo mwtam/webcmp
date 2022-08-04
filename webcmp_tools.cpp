@@ -13,7 +13,7 @@ int write_data(char *data, size_t size, size_t nmemb,
     return size * nmemb;
 }
 
-std::string curl_example()
+std::string download_page(const std::string &url)
 {
     // Example
     // - https://curl.se/libcurl/c/sepheaders.html
@@ -25,10 +25,6 @@ std::string curl_example()
     // TODO: Add error handling
 
     CURL *curl_handle;
-    static const char *headerfilename = "head.out";
-    FILE *headerfile;
-    static const char *bodyfilename = "body.out";
-    FILE *bodyfile;
 
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -36,7 +32,7 @@ std::string curl_example()
     curl_handle = curl_easy_init();
 
     /* set URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, "https://example.com");
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
 
     /* no progress meter please */
     curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
@@ -44,10 +40,10 @@ std::string curl_example()
     CURLcode code;
     std::string buffer;
     code = curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
-    // if (code != CURLE_OK)
-    // {
-    //     return false;
-    // }
+    if (code != CURLE_OK)
+    {
+        return "+++";
+    }
     /* send all data to this function  */
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 
@@ -58,9 +54,4 @@ std::string curl_example()
     curl_easy_cleanup(curl_handle);
 
     return buffer;
-}
-
-std::string download_page(const std::string &url)
-{
-    return curl_example();
 }
