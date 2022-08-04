@@ -11,7 +11,7 @@ find_package(CURL REQUIRED)
 # target_link_libraries(webcmp ${CURL_LIBRARIES})
 target_link_libraries(webcmp CURL::libcurl)
 
-target_compile_options(webcmp PRIVATE -Wall -Wextra -Wpedantic -Werror)
+# target_compile_options(webcmp PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
 enable_testing()
 
