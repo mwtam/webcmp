@@ -1,5 +1,5 @@
 #include "webcmp_tools.h"
-#include <curl/curl.h>
+// #include <curl/curl.h>
 
 size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string *writerData)
 {
@@ -11,54 +11,65 @@ size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string 
     return size * nmemb;
 }
 
-std::string download_page(const std::string &url)
+BrowserCurl::BrowserCurl()
 {
-    // Example
-    // - https://curl.se/libcurl/c/sepheaders.html
-    //
-    // My writer is more similar to
-    // - https://curl.se/libcurl/c/htmltitle.html
-    // for it writes to a string
-
-    // TODO: Add error handling
-
-    CURL *curl_handle;
+    // CURL *curl_handle;
 
     curl_global_init(CURL_GLOBAL_ALL);
 
     /* init the curl session */
     curl_handle = curl_easy_init();
 
-    /* set URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
-
     /* no progress meter please */
     curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 
     CURLcode res;
-    std::string buffer;
-    res = curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &buffer);
+    // std::string buffer;
+    res = curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &page);
     if (res != CURLE_OK)
     {
-        return curl_easy_strerror(res);
+        error_msg = curl_easy_strerror(res);
+        return;
     }
 
     /* send all data to this function  */
     res = curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, custom_curl_writefunc);
     if (res != CURLE_OK)
     {
-        return curl_easy_strerror(res);
+        error_msg = curl_easy_strerror(res);
+        return;
     }
+}
+
+BrowserCurl::~BrowserCurl()
+{
+    /* cleanup curl stuff */
+    curl_easy_cleanup(curl_handle);
+}
+
+std::string::size_type BrowserCurl::go(const std::string& url)
+{
+    if (!error_msg.empty())
+    {
+        return 0;
+    }
+
+    CURLcode res;
+    page.clear();
+    page.reserve(1024*1024*50);
+
+    /* set URL to get */
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
 
     /* get it! */
     res = curl_easy_perform(curl_handle);
+
     if (res != CURLE_OK)
     {
-        return curl_easy_strerror(res);
+        error_msg = curl_easy_strerror(res);
+        return 0;
     }
 
-    /* cleanup curl stuff */
-    curl_easy_cleanup(curl_handle);
-
-    return buffer;
+    return page.length();
 }
+
