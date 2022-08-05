@@ -33,3 +33,4 @@
 
 # vscode and cmake
 build/
+.vscode
