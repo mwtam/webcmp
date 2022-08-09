@@ -74,7 +74,6 @@ bool BrowserCurl::go(const std::string& url)
     return true;
 }
 
-// std::vector<std::tuple<int, int>> find_regex(const std::string &s, const std::regex &target_regex)
 std::vector<std::string_view> find_regex(const std::string &s, const std::regex &target_regex)
 {
     std::vector<std::string_view> v;
