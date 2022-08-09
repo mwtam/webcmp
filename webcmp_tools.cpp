@@ -74,19 +74,18 @@ bool BrowserCurl::go(const std::string& url)
     return true;
 }
 
-std::vector<std::tuple<int, int>> find_regex(const std::string &s, const std::regex &target_regex)
+// std::vector<std::tuple<int, int>> find_regex(const std::string &s, const std::regex &target_regex)
+std::vector<std::string_view> find_regex(const std::string &s, const std::regex &target_regex)
 {
-    std::vector<std::tuple<int, int>> v;
-    v.reserve(10);
+    std::vector<std::string_view> v;
+    v.reserve(100);
 
     std::smatch m;
     auto here = s.begin();
-    auto end = s.end();
     
-    while (std::regex_search(here, end, m, target_regex))
+    while (std::regex_search(here, s.end(), m, target_regex))
     {
-        // Record the substr as {position, length}
-        v.emplace_back(here - s.begin() + m.position(), m.length());
+        v.emplace_back(m[0].first, m[0].second);
 
         here = m[0].second;
     }

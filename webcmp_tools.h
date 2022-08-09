@@ -2,7 +2,6 @@
 #define WEBCMP_TOOLS__H
 
 #include <string>
-#include <tuple>
 #include <regex>
 #include <vector>
 #include <curl/curl.h>
@@ -21,6 +20,6 @@ private:
     CURL *curl_handle;
 };
 
-std::vector<std::tuple<int, int>> find_regex(const std::string &s, const std::regex &target_regex);
+std::vector<std::string_view> find_regex(const std::string &s, const std::regex &target_regex);
 
 #endif
