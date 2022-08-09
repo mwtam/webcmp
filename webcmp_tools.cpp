@@ -1,5 +1,6 @@
 #include "webcmp_tools.h"
-// #include <curl/curl.h>
+
+#include <iostream>
 
 size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string *writerData)
 {
@@ -73,16 +74,20 @@ bool BrowserCurl::go(const std::string& url)
     return true;
 }
 
-std::vector<std::string> find_regex(const std::string &s, const std::regex &target_regex)
+std::vector<std::tuple<int, int>> find_regex(const std::string &s, const std::regex &target_regex)
 {
-    std::vector<std::string> v;
+    std::vector<std::tuple<int, int>> v;
+    v.reserve(10);
+
     std::smatch m;
     auto here = s.begin();
     auto end = s.end();
     
     while (std::regex_search(here, end, m, target_regex))
     {
-        v.emplace_back(m[0]);
+        // Record the substr as {position, length}
+        v.emplace_back(here - s.begin() + m.position(), m.length());
+
         here = m[0].second;
     }
     return v;
