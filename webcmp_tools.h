@@ -2,6 +2,8 @@
 #define WEBCMP_TOOLS__H
 
 #include <string>
+#include <regex>
+#include <vector>
 #include <curl/curl.h>
 
 class BrowserCurl
@@ -9,7 +11,7 @@ class BrowserCurl
 public:
     BrowserCurl();
     virtual ~BrowserCurl();
-    std::string::size_type go(const std::string& url);
+    bool go(const std::string &url);
     // std::string page;
     std::string page; // the page will be here
     std::string error_msg;
@@ -17,5 +19,7 @@ public:
 private:
     CURL *curl_handle;
 };
+
+std::vector<std::string> find_regex(const std::string &s, const std::regex &target_regex);
 
 #endif

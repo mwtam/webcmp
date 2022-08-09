@@ -9,7 +9,10 @@ add_executable(webcmp main.cpp webcmp_tools.cpp)
 find_package(CURL REQUIRED) 
 # include_directories(${CURL_INCLUDE_DIR})
 # target_link_libraries(webcmp ${CURL_LIBRARIES})
-target_link_libraries(webcmp CURL::libcurl)
+target_link_libraries(
+  webcmp 
+  CURL::libcurl
+)
 
 # target_compile_options(webcmp PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
@@ -17,10 +20,11 @@ enable_testing()
 
 include(GoogleTest)
 
-add_executable(webcmp_test main_test.cpp)
+add_executable(webcmp_test main_test.cpp webcmp_tools.cpp)
 
 target_link_libraries(
   webcmp_test
+  CURL::libcurl
   GTest::gtest_main
 )
 

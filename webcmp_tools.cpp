@@ -47,29 +47,43 @@ BrowserCurl::~BrowserCurl()
     curl_easy_cleanup(curl_handle);
 }
 
-std::string::size_type BrowserCurl::go(const std::string& url)
+bool BrowserCurl::go(const std::string& url)
 {
-    if (!error_msg.empty())
-    {
-        return 0;
-    }
-
     CURLcode res;
     page.clear();
     page.reserve(1024*1024*50);
+    error_msg.clear();
 
     /* set URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
-
-    /* get it! */
-    res = curl_easy_perform(curl_handle);
-
+    res = curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     if (res != CURLE_OK)
     {
         error_msg = curl_easy_strerror(res);
-        return 0;
+        return false;
     }
 
-    return page.length();
+    /* get it! */
+    res = curl_easy_perform(curl_handle);
+    if (res != CURLE_OK)
+    {
+        error_msg = curl_easy_strerror(res);
+        return false;
+    }
+
+    return true;
 }
 
+std::vector<std::string> find_regex(const std::string &s, const std::regex &target_regex)
+{
+    std::vector<std::string> v;
+    std::smatch m;
+    auto here = s.begin();
+    auto end = s.end();
+    
+    while (std::regex_search(here, end, m, target_regex))
+    {
+        v.emplace_back(m[0]);
+        here = m[0].second;
+    }
+    return v;
+}
