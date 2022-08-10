@@ -6,6 +6,7 @@
 #include <vector>
 #include <curl/curl.h>
 
+// TODO: Better error handling
 class BrowserCurl
 {
 public:
