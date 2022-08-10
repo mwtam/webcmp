@@ -1,6 +1,7 @@
 #include "webcmp_tools.h"
 
 #include <iostream>
+#include <algorithm>
 
 size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string *writerData)
 {
@@ -74,7 +75,7 @@ bool BrowserCurl::go(const std::string& url)
     return true;
 }
 
-std::vector<std::string_view> find_regex(const std::string &s, const std::regex &target_regex)
+std::vector<std::string_view> search_regex_str_v(const std::string &s, const std::regex &target_regex)
 {
     std::vector<std::string_view> v;
     v.reserve(100);
@@ -89,4 +90,11 @@ std::vector<std::string_view> find_regex(const std::string &s, const std::regex 
         here = m[0].second;
     }
     return v;
+}
+
+void normalize_result(std::vector<std::string_view> &v)
+{
+    std::ranges::sort(v);
+    const auto [first, last] = std::ranges::unique(v.begin(), v.end());
+    v.erase(first, last);
 }
