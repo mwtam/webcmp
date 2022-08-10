@@ -2,13 +2,14 @@
 id: pxi555um6e5tvv5hlz48rdr
 title: Kanban
 desc: ''
-updated: 1660115294114
+updated: 1660126669210
 created: 1659684610288
 ---
 
 # Working
 
 # Backlog
+- [ ] Make the result vector a string presentation (for compare to a file later)
 - [ ] Remember the last state
 - [ ] Diff the current state vs memory
 
