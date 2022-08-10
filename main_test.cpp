@@ -1,15 +1,7 @@
 #include <gtest/gtest.h>
 #include "webcmp_tools.h"
 
-// // Demonstrate some basic assertions.
-// TEST(HelloTest, BasicAssertions) {
-//   // Expect two strings not to be equal.
-//   EXPECT_STRNE("hello", "world");
-//   // Expect equality.
-//   EXPECT_EQ(7 * 6, 42);
-// }
-
-TEST(RegexTest, SimpleSearch)
+TEST(SearchRegExRetStrV, SimpleSearch)
 {
   std::string s = "I am loving Fish1 and Fish2 and Fish99";
   auto v = search_regex_str_v(s, std::regex("Fish[0-9]+"));
@@ -17,7 +9,7 @@ TEST(RegexTest, SimpleSearch)
   EXPECT_EQ(v, oracle);
 }
 
-TEST(RegexTest, CaseSensitive)
+TEST(SearchRegExRetStrV, CaseSensitive)
 {
   std::string s = "I am loving Fish1 and Fish2 and Fish99";
   auto v = search_regex_str_v(s, std::regex("fish[0-9]+"));
@@ -25,7 +17,15 @@ TEST(RegexTest, CaseSensitive)
   EXPECT_EQ(v, oracle);
 }
 
-TEST(RegexTest, Normalize_Result)
+// TEST(SearchRegExRetStrV, BadUse)
+// {
+//   // This should fail to compile
+//   auto v = search_regex_str_v("I am loving Fish1 and Fish2 and Fish99", std::regex("Fish[0-9]+"));
+//   std::vector<std::string_view> oracle = {"Fish1", "Fish2", "Fish99"};
+//   EXPECT_EQ(v, oracle);
+// }
+
+TEST(SearchRegExRetStrV, Normalize_Result)
 {
   std::string s = "I am loving Fish07 and Fish02 and Fish29 and Fish02";
   auto v = search_regex_str_v(s, std::regex("Fish[0-9]+"));
