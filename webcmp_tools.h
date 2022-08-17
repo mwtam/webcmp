@@ -34,4 +34,6 @@ void search_regex_str_v(const char* s, const std::regex &target_regex);
 // Normalize the result vector in-place
 void normalize_result(std::vector<std::string_view> &v);
 
+void read_json();
+
 #endif
