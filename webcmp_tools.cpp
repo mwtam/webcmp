@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <boost/json.hpp>
 
 size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string *writerData)
 {
@@ -101,36 +100,27 @@ void normalize_result(std::vector<std::string_view> &v)
     v.erase(first, last);
 }
 
-void read_json()
+void write_result(const std::string &filename, const std::vector<std::string_view> &v)
 {
-    std::cout << "+++\n";
-    std::ifstream t("webcmp_work.json");
+    std::ofstream fout;
+    fout.open(filename);
+    for (auto &&l : v)
+    {
+        fout << l << "\n";
+    }
+}
+
+boost::json::value read_json(const std::string &work_file, boost::json::error_code &ec)
+{
+    std::ifstream t(work_file);
     std::stringstream buffer;
     buffer << t.rdbuf();
     // std::cout << buffer.str() << "\n";
 
-    namespace json = boost::json;
-    json::parse_options opt;
+    boost::json::parse_options opt;
     opt.allow_comments = true;
     opt.allow_trailing_commas = true;
 
-    json::error_code ec;
-    json::value jv = json::parse(buffer.str(), ec, {}, opt);
-    if (ec)
-    {
-        std::cout << "ec: " << ec << " "
-                  << ec.message() << "\n";
-        return;
-    }
+    return boost::json::parse(buffer.str(), ec, {}, opt);
 
-    for(auto&& [k, v] : jv.as_object())
-    {
-        std::cout << "jv i: " << k << "\n";
-        for(auto&& [k1, v1] : v.as_object())
-        {
-            std::cout << "    jv j: " << k1 << "\n";
-            std::cout << "        jv k: " << v1 << "\n";
-        }
-        
-    }
 }

@@ -2,14 +2,14 @@
 id: pxi555um6e5tvv5hlz48rdr
 title: Kanban
 desc: ''
-updated: 1660706722334
+updated: 1660797567635
 created: 1659684610288
 ---
 
 ## Working
 
 - [x] Read sites to visit (in json?)
-- [ ] Remember the last state
+- [x] Remember the last state
 - [ ] Make the result vector a string presentation (for compare to a file later)
 
 ## Backlog

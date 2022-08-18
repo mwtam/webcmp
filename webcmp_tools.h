@@ -4,6 +4,7 @@
 #include <string>
 #include <regex>
 #include <vector>
+#include <boost/json.hpp>
 #include <curl/curl.h>
 
 // TODO: Better error handling
@@ -29,11 +30,13 @@ std::vector<std::string_view> search_regex_str_v(const std::string &s, const std
 
 // Trap the call to this function with char*
 // Code will not compile if called this way.
-void search_regex_str_v(const char* s, const std::regex &target_regex);
+void search_regex_str_v(const char *s, const std::regex &target_regex);
 
 // Normalize the result vector in-place
 void normalize_result(std::vector<std::string_view> &v);
 
-void read_json();
+void write_result(const std::string &filename, const std::vector<std::string_view> &v);
+
+boost::json::value read_json(const std::string &work_file, boost::json::error_code &ec);
 
 #endif
