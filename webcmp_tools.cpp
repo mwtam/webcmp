@@ -110,6 +110,47 @@ void write_result(const std::string &filename, const std::vector<std::string_vie
     }
 }
 
+std::string read_file(const std::string &filename)
+{
+    std::ifstream t(filename);
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    return buffer.str();
+}
+
+std::vector<std::string_view> to_result(const std::string &s)
+{
+    std::vector<std::string_view> v;
+
+    auto from = s.begin();
+    auto to = s.begin();
+    while (true)
+    {
+        while (*to != '\n' && to != s.end())
+        {
+            ++to;
+        }
+
+        v.emplace_back(from, to);
+
+        if (to == s.end())
+        {
+            break;
+        }
+
+        from = to + 1;
+        to = from;
+
+        if (from == s.end())
+        {
+            // The last char is a '\n'
+            break;
+        }
+    }
+
+    return v;
+}
+
 boost::json::value read_json(const std::string &work_file, boost::json::error_code &ec)
 {
     std::ifstream t(work_file);
@@ -122,5 +163,4 @@ boost::json::value read_json(const std::string &work_file, boost::json::error_co
     opt.allow_trailing_commas = true;
 
     return boost::json::parse(buffer.str(), ec, {}, opt);
-
 }

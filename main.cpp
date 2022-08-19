@@ -4,16 +4,6 @@
 #include <string>
 #include "webcmp_tools.h"
 
-// TESTING
-std::string temp_read_file()
-{
-    std::ifstream t("oracle_site.html");
-    std::stringstream buffer;
-    buffer << t.rdbuf();
-    return buffer.str();
-}
-// TESTING
-
 void work(const std::string &work_file)
 {
     boost::json::error_code ec;
@@ -65,20 +55,25 @@ void work(const std::string &work_file)
 
         // TESTING
         // Read the html from file instead of going to the site.
-        auto s = temp_read_file();
+        auto s = read_file("oracle_site.html");
         // TESTING
 
         auto v = search_regex_str_v(s, std::regex(regex));
         normalize_result(v);
 
-        // TODO:
-        // Compare the result with memory
-        //     - if same, report "unchanged"
-        //     - if different
-        //         - move the old file away
-        //         - save the new file
-        //         - report "updated"
-        write_result(task_id, v);
+        // Result is a vector of string_view,
+        // so need to keep the original string
+        auto result_s = read_file(task_id);
+        auto result_v = to_result(result_s);
+        if (v == result_v)
+        {
+            std::cout << "Unchanged" << "\n";
+        }
+        else
+        {
+            std::cout << "Changed" << "\n";
+            write_result(task_id, v);
+        }
     }
 }
 

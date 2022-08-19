@@ -35,7 +35,10 @@ void search_regex_str_v(const char *s, const std::regex &target_regex);
 // Normalize the result vector in-place
 void normalize_result(std::vector<std::string_view> &v);
 
+std::string read_file(const std::string &filename);
+
 void write_result(const std::string &filename, const std::vector<std::string_view> &v);
+std::vector<std::string_view> to_result(const std::string &s);
 
 boost::json::value read_json(const std::string &work_file, boost::json::error_code &ec);
 
