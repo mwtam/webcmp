@@ -16,17 +16,31 @@ size_t custom_curl_writefunc(char *data, size_t size, size_t nmemb, std::string 
 
 BrowserCurl::BrowserCurl()
 {
-    // CURL *curl_handle;
+    CURLcode res;
 
-    curl_global_init(CURL_GLOBAL_ALL);
+    res = curl_global_init(CURL_GLOBAL_ALL);
+    if (res != CURLE_OK)
+    {
+        error_msg = curl_easy_strerror(res);
+        return;
+    }
 
     /* init the curl session */
     curl_handle = curl_easy_init();
+    if (!curl_handle)
+    {
+        error_msg = "curl_easy_init() returns NULL";
+        return;
+    }
 
     /* no progress meter please */
-    curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+    res = curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+    if (res != CURLE_OK)
+    {
+        error_msg = curl_easy_strerror(res);
+        return;
+    }
 
-    CURLcode res;
     // std::string buffer;
     res = curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &page);
     if (res != CURLE_OK)
@@ -56,6 +70,7 @@ bool BrowserCurl::go(const std::string &url)
     page.clear();
     page.reserve(1024 * 1024 * 50);
     error_msg.clear();
+    response_code = 0;
 
     /* set URL to get */
     res = curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
@@ -70,6 +85,14 @@ bool BrowserCurl::go(const std::string &url)
     if (res != CURLE_OK)
     {
         error_msg = curl_easy_strerror(res);
+        return false;
+    }
+
+    curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
+    if (response_code != 200)
+    {
+        error_msg = "Response: ";
+        error_msg += std::to_string(response_code);
         return false;
     }
 

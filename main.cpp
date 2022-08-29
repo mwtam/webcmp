@@ -2,6 +2,7 @@
 #include <fstream>
 #include <array>
 #include <string>
+#include <filesystem>
 #include "webcmp_tools.h"
 
 void work(const std::string &work_file)
@@ -17,10 +18,15 @@ void work(const std::string &work_file)
     }
 
     BrowserCurl b;
+    if (b.error_msg != "")
+    {
+        std::cout << "Error in curl: " << b.error_msg << "\n";
+        return;
+    }
 
     for (auto &&[task_id, obj] : jv.as_object())
     {
-        std::cout << "Working on: " << task_id << "\n";
+        std::cout << "Working on: " << task_id << " - ";
 
         const auto URL = 0;
         const auto REGEX = 1;
@@ -42,36 +48,44 @@ void work(const std::string &work_file)
         const auto &url = m[URL];
         const auto &regex = m[REGEX];
 
-        // TESTING
-        // if (!b.go(url))
-        // {
-        //     std::cout << "Error when visiting " << url << "\n";
-        //     std::cout << "Error: " << b.error_msg << "\n";
-        //     return;
-        // }
+        if (!b.go(url))
+        {
+            std::cout << "Error" << "\n";
+            std::cout << "    " << url << "\n";
+            std::cout << "    " << b.error_msg << "\n";
+            continue;
+        }
 
-        // std::string& s = b.page;
-        // TESTING
-
-        // TESTING
-        // Read the html from file instead of going to the site.
-        auto s = read_file("oracle_site.html");
-        // TESTING
+        std::string& s = b.page;
 
         auto v = search_regex_str_v(s, std::regex(regex));
         normalize_result(v);
 
+        // Read the memory
+        std::filesystem::path f{ task_id };
+        if (!std::filesystem::exists(f))
+        {
+            std::cout << "New Entry"
+                      << "\n";
+            // New file
+            write_result(task_id, v);
+            continue;
+        }
         // Result is a vector of string_view,
         // so need to keep the original string
         auto result_s = read_file(task_id);
         auto result_v = to_result(result_s);
+
         if (v == result_v)
         {
-            std::cout << "Unchanged" << "\n";
+            std::cout << "Unchanged"
+                      << "\n";
         }
         else
         {
-            std::cout << "Changed" << "\n";
+            std::cout << "Changed"
+                      << "\n";
+            std::cout << "    " << url << "\n";
             write_result(task_id, v);
         }
     }

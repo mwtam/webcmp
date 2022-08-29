@@ -16,6 +16,7 @@ public:
     bool go(const std::string &url);
     std::string page;
     std::string error_msg;
+    long response_code;
 
 private:
     CURL *curl_handle;
