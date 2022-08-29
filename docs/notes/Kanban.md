@@ -2,11 +2,17 @@
 id: pxi555um6e5tvv5hlz48rdr
 title: Kanban
 desc: ''
-updated: 1661749218169
+updated: 1661751173926
 created: 1659684610288
 ---
 
 ## Working
+
+- [ ] Make install
+
+- [ ] Keep memory in git (a private project)
+
+- [ ] Packaging
 
 ## Backlog
 
