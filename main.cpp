@@ -26,7 +26,7 @@ void work(const std::string &work_file)
 
     for (auto &&[task_id, obj] : jv.as_object())
     {
-        std::cout << "Working on: " << task_id << " - ";
+        std::cout << "Working on: " << task_id << " - " << std::flush;
 
         const auto URL = 0;
         const auto REGEX = 1;

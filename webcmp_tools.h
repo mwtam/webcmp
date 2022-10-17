@@ -10,6 +10,7 @@
 // TODO: Better error handling
 class BrowserCurl
 {
+
 public:
     BrowserCurl();
     virtual ~BrowserCurl();

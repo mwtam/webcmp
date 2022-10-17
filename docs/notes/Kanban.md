@@ -2,7 +2,7 @@
 id: pxi555um6e5tvv5hlz48rdr
 title: Kanban
 desc: ''
-updated: 1661751173926
+updated: 1661772375386
 created: 1659684610288
 ---
 
@@ -10,9 +10,11 @@ created: 1659684610288
 
 - [ ] Make install
 
-- [ ] Keep memory in git (a private project)
+- [x] Keep memory in git (a private project)
 
 - [ ] Packaging
+
+- [ ] Randomize the access order
 
 ## Backlog
 

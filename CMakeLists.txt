@@ -23,7 +23,7 @@ target_link_libraries(
   ${Boost_LIBRARIES}
 )
 
-# target_compile_options(webcmp PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(webcmp PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
 enable_testing()
 
