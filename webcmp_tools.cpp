@@ -99,12 +99,13 @@ bool BrowserCurl::go(const std::string &url)
     return true;
 }
 
-std::vector<std::string_view> search_regex_str_v(const std::string &s, const std::regex &target_regex)
+std::vector<std::string_view> search_regex_str_v(const std::string_view &s, const std::regex &target_regex)
 {
     std::vector<std::string_view> v;
     v.reserve(100);
 
-    std::smatch m;
+    std::match_results<std::string_view::const_iterator> m;
+
     auto here = s.begin();
 
     while (std::regex_search(here, s.end(), m, target_regex))

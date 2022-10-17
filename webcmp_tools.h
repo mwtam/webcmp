@@ -28,7 +28,7 @@ private:
 // Hence
 // 1. s must be a std::string, and
 // 2. s must live when the returned vector is used
-std::vector<std::string_view> search_regex_str_v(const std::string &s, const std::regex &target_regex);
+std::vector<std::string_view> search_regex_str_v(const std::string_view &s, const std::regex &target_regex);
 
 // Normalize the result vector in-place
 void normalize_result(std::vector<std::string_view> &v);
