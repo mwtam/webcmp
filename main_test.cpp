@@ -9,6 +9,15 @@ TEST(SearchRegExRetStrV, SimpleSearch)
   EXPECT_EQ(v, oracle);
 }
 
+TEST(SearchRegExRetStrV, SimpleSearchChar)
+{
+  auto v = search_regex_str_v(
+      "I am loving Fish1 and Fish2 and Fish99",
+      std::regex("Fish[0-9]+"));
+  std::vector<std::string_view> oracle = {"Fish1", "Fish2", "Fish99"};
+  EXPECT_EQ(v, oracle);
+}
+
 TEST(SearchRegExRetStrV, CaseSensitive)
 {
   std::string s = "I am loving Fish1 and Fish2 and Fish99";
